@@ -1,7 +1,9 @@
 """A Pyython package for installing an N-spin system."""
 
 # Add imports here
-from .functions import *
+from .SpinConfiguration import *
+from .Hamiltonian import *
+from .SpinConfigurationSystem import *
 
 # Handle versioneer
 from ._version import get_versions

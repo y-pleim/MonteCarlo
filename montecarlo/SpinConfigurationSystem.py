@@ -1,4 +1,5 @@
 import numpy
+from .SpinConfiguration import *
 
 class SpinConfigurationSystem():
     def __init__(self):
