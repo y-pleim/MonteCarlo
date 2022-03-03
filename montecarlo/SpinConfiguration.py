@@ -10,16 +10,6 @@ class SpinConfiguration:
         self.config = []
 
     def __str__(self):
-        """
-        Returns a string that is printed when the print function is applied to
-        a SpinConfiguration object.
-
-        Returns
-        -------
-        list_string : str
-            A list of all of the spins represented by the SpinConfiguration object.
-        """
-
         list_string = ""  # string to be filled using for loop
         for i in range(len(self.config)):  # executes for every entry in self.config
             if (
@@ -31,6 +21,21 @@ class SpinConfiguration:
                     str(self.config[i]) + ", "
                 )  # separation character between entries is a comma
         return list_string
+
+    def __getitem__(self, i):
+        return self.config[i]
+
+    def get_spins(self):
+        """
+        Returns the list of spin values stored in a SpinConfigurationObject.
+
+        Returns
+        -------
+        spins_list : list
+            A copy of the list stored in a SpinConfigurationObject.
+        """
+        spins_list = self.config
+        return spins_list
 
     def initialize(self, order):
         """
@@ -57,13 +62,13 @@ class SpinConfiguration:
         number_of_sites = len(self.config)
         return number_of_sites
 
-    def randomize(self, N):
+    def randomize(self, N=8):
         """
         Creates a randomly generated spin configuration with N sites.
 
         Parameters
         ----------
-        N : int
+        N : int, default: 8
             Number of sites that the SpinConfiguration object should represent.
         """
         self.config = []  # resets spins list

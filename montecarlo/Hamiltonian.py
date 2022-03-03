@@ -13,15 +13,6 @@ class Hamiltonian:
         self.doPeriodicBoundaryConditions = False
 
     def __str__(self):
-        """
-        Returns a string to be printed that contains the values associated with a Hamiltonian object.
-
-        Returns
-        -------
-        ham_message : str
-            Contains the values of J/mu and whether periodic boundary conditions are applied..
-        """
-
         ham_message = (
             "J = "
             + str(self.J)
@@ -39,11 +30,11 @@ class Hamiltonian:
 
         Parameters
         ----------
-        J : float
+        J : float, default: -1.1
             Constant that represents the strength of the coupling term in the Hamiltonian.
-        mu : float
+        mu : float, default: 1.01
             Constant that represents the strength of the external field in the Hamiltonian.
-        periodic_flag : bool
+        periodic_flag : bool, default: False
             Indicates whether periodic boundary conditions are considered when calculating the Hamiltonian.
         """
 
@@ -305,11 +296,11 @@ class Hamiltonian:
         ----------
         system : SpinConfigurationSystem
             The spin system for which the graph is produced.
-        start : float
+        start : float, default: 0.1
             The starting temperature value for the graph.
-        end : float
+        end : float, default: 10
             The ending temperature value for the graph.
-        step : float
+        step : float, default: 0.1
             The spacing between successive temperature values.
         """
         energies = []
@@ -329,7 +320,6 @@ class Hamiltonian:
             heat_capacity.append(self.compute_heat_capacity(temps[i], system))
             mag_susceptibility.append(self.compute_mag_susceptibility(temps[i], system))
 
-        plt.figure()
         plt.plot(
             temps,
             energies,

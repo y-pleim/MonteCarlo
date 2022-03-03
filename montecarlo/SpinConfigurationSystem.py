@@ -9,13 +9,13 @@ class SpinConfigurationSystem:
         """
         self.collection = []
 
-    def initialize(self, N):
+    def initialize(self, N=8):
         """
         Populates a SpinConfigurationSystem with all possible SpinConfiguration objects for N sites.
 
         Parameters
         ----------
-        N : int
+        N : int, default: 8
             The number of spin sites for the system.
         """
         for i in range(
@@ -39,15 +39,10 @@ class SpinConfigurationSystem:
             self.collection.append(configuration)
 
     def __str__(self):
-        """
-        Called when printing the collection of spin configurations contained inside a SpinConfigurationSystem object.
-
-        Returns
-        -------
-        sys_string : str
-            Lists all of the spins in each configuration of the spin system.
-        """
         sys_string = ""
         for i in range(len(self.collection)):
             sys_string += self.collection[i].__str__() + "\n"
         return sys_string
+
+    def __getitem__(self, i):
+        return self.collection[i].get_spins()

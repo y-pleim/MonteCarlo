@@ -28,11 +28,11 @@ def test_SpinConfiguration():
     conf2.randomize(8)
     conf.initialize([1, 1, 1, 1, 1, 1, 1, 1])
 
-    assert conf.__str__() == "1, 1, 1, 1, 1, 1, 1, 1."
-    assert conf.config == [1, 1, 1, 1, 1, 1, 1, 1]
+    assert str(conf) == "1, 1, 1, 1, 1, 1, 1, 1."
+    assert conf.get_spins() == [1, 1, 1, 1, 1, 1, 1, 1]
     assert conf.n_sites() == 8
     assert conf.compute_magnetization() == 8
-    assert conf2.config == [0, 0, 0, 1, 0, 1, 1, 0]
+    assert conf2.get_spins() == [0, 0, 0, 1, 0, 1, 1, 0]
 
 
 def test_Hamiltonian():
@@ -62,6 +62,6 @@ def test_SpinConfigSys():
     conf = montecarlo.SpinConfiguration()
     conf_sys.initialize(8)
     conf.initialize([0, 0, 0, 0, 0, 0, 0, 1])
-    assert conf_sys.collection[1].config == conf.config
+    assert conf_sys[1] == conf.get_spins()
     for i in range(len(conf_sys.collection)):
-        assert conf_sys.__str__().count(conf_sys.collection[i].__str__()) == 1
+        assert (str(conf_sys).count(str(conf_sys.collection[i])) == 1)
