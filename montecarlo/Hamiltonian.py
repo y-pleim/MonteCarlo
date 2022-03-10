@@ -287,60 +287,51 @@ class Hamiltonian:
         mag_susceptibility = difference / temp
         return mag_susceptibility
 
-    def graph_thermal_quantities(self, system, start=0.1, end=10, step=0.1):
+    def generate_thermal_quantities(self, system, start=0.1, end=10, step=0.1):
         """
-        Produces a graph of the average energy, average magnetization, heat capacity and magnetic
-        susceptibility of a spin system over a specified temperature range.
+        Produces lists of the average energy, average magnetization, heat capacity and magnetic
+        susceptibility values of a spin system over a specified temperature range.
 
         Parameters
         ----------
         system : SpinConfigurationSystem
-            The spin system for which the graph is produced.
+            The spin system for which the data lists are produced.
         start : float, default: 0.1
             The starting temperature value for the graph.
         end : float, default: 10
             The ending temperature value for the graph.
         step : float, default: 0.1
             The spacing between successive temperature values.
+
+        Returns
+        -------
+        temps_list : list
+            The list of temperatures generated from the start, end, and step values.
+        energies_list : list
+            The list of average energies for the temperatures considered.
+        magnetization_list : list
+            The list of average magnetization values for the temperatures considered.
+        heat_capacity_list : list
+            The list of heat capacity values for the temperatures considered.
+        mag_susceptibility_list : list
+            The list of magnetic susceptibility values for the temperatures considered.
+
         """
-        energies = []
-        magnetization = []
-        heat_capacity = []
-        mag_susceptibility = []
-        temps = []
+        energies_list = []
+        magnetization_list = []
+        heat_capacity_list = []
+        mag_susceptibility_list = []
+        temps_list = []
 
         i = start
         while i <= end:
-            temps.append(i)
+            temps_list.append(i)
             i += step
 
-        for i in range(len(temps)):
-            energies.append(self.compute_average_energy(temps[i], system))
-            magnetization.append(self.compute_average_mag(temps[i], system))
-            heat_capacity.append(self.compute_heat_capacity(temps[i], system))
-            mag_susceptibility.append(self.compute_mag_susceptibility(temps[i], system))
+        for i in range(len(temps_list)):
+            energies_list.append(self.compute_average_energy(temps_list[i], system))
+            magnetization_list.append(self.compute_average_mag(temps_list[i], system))
+            heat_capacity_list.append(self.compute_heat_capacity(temps_list[i], system))
+            mag_susceptibility_list.append(self.compute_mag_susceptibility(temps_list[i], system))
 
-        plt.plot(
-            temps,
-            energies,
-            "r-",
-            temps,
-            magnetization,
-            "b-",
-            temps,
-            heat_capacity,
-            "g-",
-            temps,
-            mag_susceptibility,
-            "y-",
-        )
-        plt.legend(
-            [
-                "Average Energy",
-                "Average Magnetization",
-                "Heat Capacity",
-                "Mag Susceptibility",
-            ],
-            loc="best",
-        )
-        plt.xlabel("Temperature (K)")
+        return temps_list, energies_list, magnetization_list, heat_capacity_list, mag_susceptibility_list

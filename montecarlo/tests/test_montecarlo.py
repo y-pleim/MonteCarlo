@@ -13,12 +13,12 @@ import random
 
 
 def test_1():
-    assert 1 == 1
+    assert (1 == 1)
 
 
 def test_montecarlo_imported():
     """Sample test, will always pass so long as import statement worked."""
-    assert "montecarlo" in sys.modules
+    assert ("montecarlo" in sys.modules)
 
 
 def test_SpinConfiguration():
@@ -28,11 +28,11 @@ def test_SpinConfiguration():
     conf2.randomize(8)
     conf.initialize([1, 1, 1, 1, 1, 1, 1, 1])
 
-    assert str(conf) == "1, 1, 1, 1, 1, 1, 1, 1."
-    assert conf.get_spins() == [1, 1, 1, 1, 1, 1, 1, 1]
-    assert conf.n_sites() == 8
-    assert conf.compute_magnetization() == 8
-    assert conf2.get_spins() == [0, 0, 0, 1, 0, 1, 1, 0]
+    assert (str(conf) == "1, 1, 1, 1, 1, 1, 1, 1.")
+    assert (conf.get_spins() == [1, 1, 1, 1, 1, 1, 1, 1])
+    assert (conf.n_sites() == 8)
+    assert (conf.compute_magnetization() == 8)
+    assert (conf2.get_spins() == [0, 0, 0, 1, 0, 1, 1, 0])
 
 
 def test_Hamiltonian():
@@ -51,17 +51,23 @@ def test_Hamiltonian():
 
     assert ham.compute_energy(conf) == 24.8
     # assert ham.compute_energy(conf,True) == '-8J/k + 8mu/k'
-    assert round(ham.compute_average_energy(1, conf_sys), 3) == -3.991
-    assert round(ham.compute_average_mag(1, conf_sys), 3) == -0.003
-    assert round(ham.compute_heat_capacity(1, conf_sys), 3) == 0.053
-    assert round(ham.compute_mag_susceptibility(1, conf_sys), 3) == 0.006
-
+    assert (round(ham.compute_average_energy(1, conf_sys), 3) == -3.991)
+    assert (round(ham.compute_average_mag(1, conf_sys), 3) == -0.003)
+    assert (round(ham.compute_heat_capacity(1, conf_sys), 3) == 0.053)
+    assert (round(ham.compute_mag_susceptibility(1, conf_sys), 3) == 0.006)
+    
+    temps,energies,magnetizations,heat_caps,mag_suscept = ham.generate_thermal_quantities(conf_sys)
+    assert (round(temps[9],1) == 1.0)
+    assert (round(energies[9], 3) == -3.991)
+    assert (round(magnetizations[9], 3) == -0.003)
+    assert (round(heat_caps[9], 3) == 0.053)
+    assert (round(mag_suscept[9], 3) == 0.006)
 
 def test_SpinConfigSys():
     conf_sys = montecarlo.SpinConfigurationSystem()
     conf = montecarlo.SpinConfiguration()
     conf_sys.initialize(8)
     conf.initialize([0, 0, 0, 0, 0, 0, 0, 1])
-    assert conf_sys[1] == conf.get_spins()
+    assert (conf_sys[1] == conf.get_spins())
     for i in range(len(conf_sys.collection)):
         assert (str(conf_sys).count(str(conf_sys.collection[i])) == 1)
