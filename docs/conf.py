@@ -18,7 +18,7 @@ import sys
 sys.path.insert(0, os.path.abspath('..'))
 
 import montecarlo
-
+import sphinx_rtd_theme
 
 # -- Project information -----------------------------------------------------
 
@@ -50,6 +50,7 @@ extensions = [
     'sphinx.ext.napoleon',
     'sphinx.ext.intersphinx',
     'sphinx.ext.extlinks',
+    'sphinx_rtd_theme'
 ]
 
 autosummary_generate = True

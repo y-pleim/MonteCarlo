@@ -5,7 +5,10 @@ MonteCarlo
 [![codecov](https://codecov.io/gh/REPLACE_WITH_OWNER_ACCOUNT/MonteCarlo/branch/master/graph/badge.svg)](https://codecov.io/gh/REPLACE_WITH_OWNER_ACCOUNT/MonteCarlo/branch/master)
 
 
-A Pyython package for installing an N-spin system.
+A Python package for simulating the behavior of an N-spin system and calculating various thermodynamic quantities.
+
+This package has the following dependencies:
+    - numpy
 
 ### Copyright
 
