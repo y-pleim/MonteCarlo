@@ -3,8 +3,33 @@ Getting Started
 
 This page details how to get started with MonteCarlo.
 
-Examples
+Installation
+------------
+This package was developed for use in Python 3.9. It has the following dependencies:
+
+- numpy
+
+Once the required packages are installed, MonteCarlo can be installed in the environment by using the commands below:
+
+::
+
+ git clone  
+ # this is not finished yet
+
+Background
 ----------
+This package is based on a simple, one-dimensional model of magnetism where each site in a material hosts a particle
+(typically an electron) with an intrinsic magnetic moment. Such a site can either be spin-up or spin-down. The collection of
+spins can be described by a spin configuration, which is a list of the spin value for each site.
+
+The macroscopic properties of the collection of spins are based on the coupling between adjacent spins and the effects
+of an external energy bias (e.g., an external magnetic field). The energy of a spin configuration is calculated according
+to the Ising Hamiltonian:
+
+.. math:: \frac{H}{k} = -\frac{J}{k}\sum_{<ij>} s_is_j + \frac{\mu}{k}\sum_{i} s_i
+
+Examples
+--------
 Calculating the energy of a configuration
 '''''''''''''''''''''''''''''''''''''''''
 The following is an example of how to use this package to calculate the energy of a spin configuration:
@@ -32,9 +57,10 @@ This should produce the following output:
  Spin configuration: 0, 1, 1, 1, 0, 1.
  Energy: -1.8
 
-Generating a random spin configuration
-''''''''''''''''''''''''''''''''''''''
-The following example demonstrates how to create a random spin configuration:
+Generating a random spin configuration and additional functions
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+The following example demonstrates how to create and print a random spin configuration with N=8 sites. The functionality
+of the n_sites method is also demonstrated.
 ::
  
  import montecarlo
@@ -47,13 +73,18 @@ The following example demonstrates how to create a random spin configuration:
  random.seed(2)
  spins.randomize(8)
  
+ # Get number of sites
+ num_sites = spins.n_sites()
+ 
  # Prints output
  print("Spin configuration:", spins)
+ print("Number of sites in configuration:", num_sites)
  
 This should produce the following:
 ::
  
  Spin configuration: 0, 0, 0, 1, 0, 1, 1, 0.
+ Number of sites in configuration: 8
 
 Calculating average thermal quantities
 ''''''''''''''''''''''''''''''''''''''
@@ -127,5 +158,8 @@ temperature range.
  plt.title("Thermal Quantities vs. Temperature")
 
 This should produce the following plot:
-#.. image:: ./plot.png
-#:width: 300
+
+.. image:: ./plot.png
+ :width: 400
+
+
