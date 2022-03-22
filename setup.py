@@ -1,12 +1,12 @@
 """
 MonteCarlo
-A Python package for simulating an N-spin system.
+A Pyython package for installing an N-spin system.
 """
 import sys
 from setuptools import setup, find_packages
 import versioneer
 
-short_description = "A Python package for simulating an N-spin system.".split("\n")[0]
+short_description = "A Pyython package for installing an N-spin system.".split("\n")[0]
 
 # from https://github.com/pytest-dev/pytest-runner#conditional-requirement
 needs_pytest = {'pytest', 'test', 'ptr'}.intersection(sys.argv)
