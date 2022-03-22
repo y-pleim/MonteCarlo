@@ -1,4 +1,4 @@
-"""A Pyython package for installing an N-spin system."""
+"""A Python package for simulating an N-spin system."""
 
 # Add imports here
 from .SpinConfiguration import *

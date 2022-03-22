@@ -27,7 +27,8 @@ def test_SpinConfiguration():
     random.seed(2)
     conf2.randomize(8)
     conf.initialize([1, 1, 1, 1, 1, 1, 1, 1])
-
+    
+    assert (conf[0] == 1)
     assert (str(conf) == "1, 1, 1, 1, 1, 1, 1, 1.")
     assert (conf.get_spins() == [1, 1, 1, 1, 1, 1, 1, 1])
     assert (conf.n_sites() == 8)
