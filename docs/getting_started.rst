@@ -7,26 +7,76 @@ Installation
 ------------
 This package was developed for use in Python 3.9. It has the following dependencies:
 
-- numpy
+* numpy
 
-Once the required packages are installed, MonteCarlo can be installed in the environment by using the commands below:
+Use the commands below to install this package in an environment where the above requirements
+are met.
 
 ::
 
- git clone  
- # this is not finished yet
+ git clone git@github.com:y-pleim/MonteCarlo.git
+ cd montecarlo
+ pip install -e .
 
 Background
 ----------
+Model
+'''''
 This package is based on a simple, one-dimensional model of magnetism where each site in a material hosts a particle
 (typically an electron) with an intrinsic magnetic moment. Such a site can either be spin-up or spin-down. The collection of
-spins can be described by a spin configuration, which is a list of the spin value for each site.
+spins can be described by a spin configuration, which is a list containing the spin value for each site. For example,
+for a spin system with N = 8 sites, a possible configuration is:
+
+.. math:: \uparrow , \uparrow , \downarrow , \uparrow , \downarrow , \downarrow , \uparrow , \downarrow .
+
+Such a configuration is represented by this package as a list of 0's and 1's, where a 0 entry represents a down spin
+and a 1 entry represents an up spin.
 
 The macroscopic properties of the collection of spins are based on the coupling between adjacent spins and the effects
 of an external energy bias (e.g., an external magnetic field). The energy of a spin configuration is calculated according
 to the Ising Hamiltonian:
 
-.. math:: \frac{H}{k} = -\frac{J}{k}\sum_{<ij>} s_is_j + \frac{\mu}{k}\sum_{i} s_i
+.. math:: E = \frac{H}{k} = -\frac{J}{k}\sum_{<ij>} x_ix_j + \frac{\mu}{k}\sum_{i} x_i
+
+where the x terms are either -1 (down spin) or +1 (up spin). Another pertinent property of such a system is the magnetization,
+which is given by
+
+.. math:: M = N_\uparrow - N_\downarrow
+
+i.e., the number of sites containing an up spin minus the number of sites containing a down spin in a specific
+configuration. 
+
+If desired, periodic boundary conditions can be imposed on the system simulated by this package.
+
+Thermal Quantities
+''''''''''''''''''
+To determine thermal averages, this package employs the canonical ensemble. The partition function is the sum of the
+Boltzmann factors for each of the possible states (denoted by s) of an N-spin system:
+
+.. math:: Z = \sum_{s}e^{-\epsilon _s/kT}
+
+Using this formalism, the average value of a quantity X is given by
+
+.. math:: <X>~ = \frac{1}{Z}\sum_{s}X(s) e^{-\epsilon _s/kT}
+
+This equation is used to find the average energy, average magnetization, average of the squared energies, and average
+of the squared magnetizations of the system. For example, the average energy and magnetization are given by
+
+.. math:: <E>~ = \frac{1}{Z}\sum_{s}\epsilon _s e^{-\epsilon _s/kT}
+
+and
+
+.. math:: <M>~ = \frac{1}{Z}\sum_{s}M_s e^{-\epsilon _s/kT}
+
+respectively. From these average quantities, the heat capacity and magnetic susceptibility are derived:
+
+.. math:: C~ = \frac{<E^2> - <E>^2}{kT^2}
+
+and
+
+.. math:: \chi~ = \frac{<M^2> - <M>^2}{kT}
+
+For the calculations executed by this package, Boltzmann's constant (k) has been set to 1.
 
 Examples
 --------
