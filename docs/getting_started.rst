@@ -8,6 +8,7 @@ Installation
 This package was developed for use in Python 3.9. It has the following dependencies:
 
 * numpy
+* matplotlib.pyplot (optional)
 
 Use the commands below to install this package in an environment where the above requirements
 are met.
