@@ -3,7 +3,7 @@ MonteCarlo
 [//]: # (Badges)
 [![GitHub Actions Build Status](https://github.com/y-pleim/montecarlo/workflows/CI/badge.svg)](https://github.com/y-pleim/montecarlo/actions?query=workflow%3ACI)
 [![codecov](https://codecov.io/gh/y-pleim/MonteCarlo/branch/master/graph/badge.svg)](https://codecov.io/gh/y-pleim/MonteCarlo/branch/master)
-
+[![Documentation Status](https://readthedocs.org/projects/y-pleim-montecarlo/badge/?version=latest)](https://y-pleim-montecarlo.readthedocs.io/en/latest/?badge=latest)
 
 A Python package for simulating the behavior of an N-spin system and calculating various thermodynamic quantities.
 
