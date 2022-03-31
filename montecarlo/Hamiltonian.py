@@ -1,6 +1,6 @@
 import numpy
 import matplotlib.pyplot as plt
-
+import random
 
 class Hamiltonian:
     def __init__(self):
@@ -335,3 +335,22 @@ class Hamiltonian:
             mag_susceptibility_list.append(self.compute_mag_susceptibility(temps_list[i], system))
 
         return temps_list, energies_list, magnetization_list, heat_capacity_list, mag_susceptibility_list
+
+
+    def metropolis_sweep(self, spins, temp):
+        conf = spins
+        for i in range(conf.n_sites()):
+            if spins[i] == 0:
+                conf[i] = 1
+            else:
+                conf[i] = 0
+
+            E_i = self.compute_energy(spins)
+            E_f = self.compute_energy(conf)
+            check_num = random.random()
+
+            probability = numpy.exp(-(E_f-E_i)/temp)
+            if probability < check_num:
+                spins = conf
+        
+
