@@ -4,6 +4,7 @@
 from .SpinConfiguration import *
 from .Hamiltonian import *
 from .SpinConfigurationSystem import *
+from .montecarlo_metropolis import *
 
 # Handle versioneer
 from ._version import get_versions

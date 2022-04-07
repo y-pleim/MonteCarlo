@@ -61,6 +61,9 @@ class SpinConfiguration:
         """
         number_of_sites = len(self.config)
         return number_of_sites
+    
+    def set_site(self,i,value):
+        self.config[i] = value
 
     def randomize(self, N=8):
         """

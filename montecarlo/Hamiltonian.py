@@ -1,6 +1,7 @@
 import numpy
 import matplotlib.pyplot as plt
 import random
+import copy as cp
 
 class Hamiltonian:
     def __init__(self):
@@ -338,19 +339,20 @@ class Hamiltonian:
 
 
     def metropolis_sweep(self, spins, temp):
-        conf = spins
-        for i in range(conf.n_sites()):
+        for i in range(spins.n_sites()):
+            conf = cp.deepcopy(spins)
             if spins[i] == 0:
-                conf[i] = 1
+                conf.set_site(i,1) 
             else:
-                conf[i] = 0
+                conf.set_site(i,0)
 
             E_i = self.compute_energy(spins)
             E_f = self.compute_energy(conf)
             check_num = random.random()
-
             probability = numpy.exp(-(E_f-E_i)/temp)
-            if probability < check_num:
-                spins = conf
-        
+                                  
+            if probability > check_num:
+                spins = cp.deepcopy(conf)
+            
+        return spins
 
