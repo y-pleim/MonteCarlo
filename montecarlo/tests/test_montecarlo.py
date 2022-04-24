@@ -64,6 +64,35 @@ def test_Hamiltonian():
     assert (round(heat_caps[9], 3) == 0.053)
     assert (round(mag_suscept[9], 3) == 0.006)
 
+    ham.initialize(-2,1.1,True)
+    conf_sys.initialize(8)
+    assert(round(ham.compute_average_energy(10,conf_sys), 1) == -3.6)
+    assert(round(ham.compute_average_mag(10,conf_sys), 1) == -0.6)
+    assert(round(ham.compute_heat_capacity(10,conf_sys), 1) == 0.3)
+    assert(round(ham.compute_mag_susceptibility(10,conf_sys), 1) == 0.5)
+
+    
+    random.seed(2)
+    conf.randomize(8)
+
+    conf2 = ham.metropolis_sweep(conf,1)
+    assert (conf2.get_spins() == [1,0,0,1,0,0,1,0])
+    
+    ham.initialize(-2,1.1,False)
+    conf2 = ham.metropolis_sweep(conf,1)
+    random.seed(2)
+    assert (conf2.get_spins() == [1,0,0,1,0,0,1,0])
+    
+    conf.initialize([1,1,0,1,0,0,0,1])
+    random.seed(2)
+    conf2 = ham.metropolis_sweep(conf,1)
+    assert (conf2.get_spins() == [0,1,0,1,0,1,0,1])
+    
+    conf.initialize([0,1,0,1,0,0,0,0])
+    random.seed(2)
+    conf2 = ham.metropolis_sweep(conf,1)
+    assert (conf2.get_spins() == [0,1,0,1,0,1,0,1])
+
 def test_SpinConfigSys():
     conf_sys = montecarlo.SpinConfigurationSystem()
     conf = montecarlo.SpinConfiguration()
@@ -72,3 +101,14 @@ def test_SpinConfigSys():
     assert (conf_sys[1] == conf.get_spins())
     for i in range(len(conf_sys.collection)):
         assert (str(conf_sys).count(str(conf_sys.collection[i])) == 1)
+
+def test_montecarlo_metropolis():
+    conf = montecarlo.SpinConfiguration()
+    ham = montecarlo.Hamiltonian()
+    ham.initialize(-2,1.1,True)
+    random.seed(2)
+    energy, mag, heat_cap, mag_sust = montecarlo.montecarlo_metropolis(8,ham,10,10000,1000)
+    assert (round(energy,2) == -3.90)
+    assert (round(mag,2) == -0.57)
+    assert (round(heat_cap,2) == 0.32)
+    assert (round(mag_sust,2) == 0.51)

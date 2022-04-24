@@ -79,6 +79,32 @@ and
 
 For the calculations executed by this package, Boltzmann's constant (k) has been set to 1.
 
+Metropolis Sampling
+'''''''''''''''''''
+Calculating the canonical partition function for a spin system requires finding the energy for each
+possible state. As such, for larger N systems the process of calculating thermal quantities becomes
+time-consuming.
+
+For larger systems, stochastic sampling methods such as metropolis sampling can be used for a more
+efficient determination of these thermal quantities (while introducing some statistical noise in the process).
+
+Starting from a random spin configuration, the following steps are taken to find the next spin configuration
+to be included in the calculation of the thermal averages:
+
+* The energy of the configuration is calculated.
+* The ith spin is flipped and the energy difference due to this flip is determined.
+* To determine whether the new spin configuration should replace the current spin configuration, the ratio of the Boltzmann factors is calculated:
+
+.. math:: \frac{P(new)}{P(current)} = \frac{e^{-E_{new}/kT}}{e^{-E_{current}/kT}} = e^{-\Delta E/kT}
+
+* The result is compared to a randomly generated number from 0 to 1. If the ratio of the Boltzmann factors is larger than this randomly generated number, the
+new configuration replaces the current configuration. Otherwise, the current spin configuration is kept. 
+* The spin in the i+1 site is flipped, and the same calculations/logic are applied. This process is continued until there are no sites left to examine.
+
+This process (referred to as a metropolis sweep) can be carried out a large number of times. If the number of such steps is sufficiently large, the average
+of the values produced by the kept spin configurations will converge to that found in an exact calculation (i.e., applying the canonical ensemble). Increasing
+the number of steps generally reduces the amount of noise in the resulting values, but requires an increased computation time.
+
 Examples
 --------
 Calculating the energy of a configuration
@@ -213,4 +239,10 @@ This should produce the following plot:
 .. image:: ./plot.png
  :width: 400
 
+Calculating thermal quantities for an N=50 spin system using metropolis sampling
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+This example shows how to calculate the thermal average quantities of an N=50 spin system at a
+specific temperature (T = 10K, in this case).
 
+Generating a plot of average thermal quantities using metropolis sampling
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''

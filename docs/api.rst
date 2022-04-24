@@ -7,6 +7,7 @@ Class Overview
    montecarlo.SpinConfiguration
    montecarlo.SpinConfigurationSystem
    montecarlo.Hamiltonian
+   montecarlo.montecarlo_metropolis
 
 API Documentation
 =================
@@ -22,6 +23,10 @@ API Documentation
    :special-members:
    :noindex:
 .. autoclass:: Hamiltonian
+   :members:
+   :special-members:
+   :noindex:
+.. autoclass:: montecarlo_metropolis
    :members:
    :special-members:
    :noindex:
