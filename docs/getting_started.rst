@@ -97,9 +97,10 @@ to be included in the calculation of the thermal averages:
 
 .. math:: \frac{P(new)}{P(current)} = \frac{e^{-E_{new}/kT}}{e^{-E_{current}/kT}} = e^{-\Delta E/kT}
 
-* The result is compared to a randomly generated number from 0 to 1. If the ratio of the Boltzmann factors is larger than this randomly generated number, the
-new configuration replaces the current configuration. Otherwise, the current spin configuration is kept. 
+* The result is compared to a randomly generated number from 0 to 1. If the ratio of the Boltzmann factors is larger than this randomly generated number, the new configuration replaces the current configuration. Otherwise, the current spin configuration is kept. 
 * The spin in the i+1 site is flipped, and the same calculations/logic are applied. This process is continued until there are no sites left to examine.
+
+
 
 This process (referred to as a metropolis sweep) can be carried out a large number of times. If the number of such steps is sufficiently large, the average
 of the values produced by the kept spin configurations will converge to that found in an exact calculation (i.e., applying the canonical ensemble). Increasing
@@ -107,9 +108,9 @@ the number of steps generally reduces the amount of noise in the resulting value
 
 Examples
 --------
-Calculating the energy of a configuration
-'''''''''''''''''''''''''''''''''''''''''
-The following is an example of how to use this package to calculate the energy of a spin configuration:
+Calculating the energy and magnetization of a configuration
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+The following is an example of how to use this package to calculate the energy and magnetization of a spin configuration:
 ::
 
  import montecarlo
@@ -125,19 +126,24 @@ The following is an example of how to use this package to calculate the energy o
  # Compute energy
  energy = ham.compute_energy(spins)
 
+ # Compute magnetization
+ magnetization = spins.compute_magnetization()
+
  print("Spin configuration:", spins)
  print("Energy:", round(energy,1))
+ print("Magnetization:", magnetization)
 
 This should produce the following output:
 ::
 
  Spin configuration: 0, 1, 1, 1, 0, 1.
  Energy: -1.8
+ Magnetization: 2
 
 Generating a random spin configuration and additional functions
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 The following example demonstrates how to create and print a random spin configuration with N=8 sites. The functionality
-of the n_sites method is also demonstrated.
+of the n_sites and set_site methods are also demonstrated.
 ::
  
  import montecarlo
@@ -155,13 +161,20 @@ of the n_sites method is also demonstrated.
  
  # Prints output
  print("Spin configuration:", spins)
- print("Number of sites in configuration:", num_sites)
+ print("Number of sites:", num_sites)
+
+ print("Spin at index 2:", spins[2])
+ spins.set_site(2,1)
+ print("Spin at index 2 after changing spin:", spins[2])
  
 This should produce the following:
 ::
  
  Spin configuration: 0, 0, 0, 1, 0, 1, 1, 0.
- Number of sites in configuration: 8
+ Number of sites: 8
+ Spin at index 2: 0
+ Spin at index 2 after changing spin: 1
+
 
 Calculating average thermal quantities
 ''''''''''''''''''''''''''''''''''''''
@@ -170,10 +183,8 @@ of an N=8 spin system at temperature T = 10K is given below:
 ::
 
  import montecarlo
- import numpy as np
 
  # Create spin configuration system
-
  spin_system = montecarlo.SpinConfigurationSystem()
  spin_system.initialize(8)
 
@@ -209,7 +220,6 @@ temperature range.
 ::
  
  import montecarlo
- import numpy as np
  import matplotlib.pyplot as plt
 
  # Create spin configuration system with N = 8 spins
@@ -239,10 +249,164 @@ This should produce the following plot:
 .. image:: ./plot.png
  :width: 400
 
-Calculating thermal quantities for an N=50 spin system using metropolis sampling
+Demonstration of the metropolis sweep for an N=30 spin system
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+This example demonstrates the metropolis_sweep function for an N=30 spin system at T=10K. The mu term in the Hamiltonian
+is large; the effect of this term is reflected in the configuration produced by the sweep (all spins aligned in one direction).
+::
+
+ import montecarlo
+ import random
+
+ # Create spin configuration
+ spins = montecarlo.SpinConfiguration()
+
+ # Create Hamiltonian with large negative mu value (strong external field)
+ ham = montecarlo.Hamiltonian()
+ ham.initialize(-1,-10,True)
+
+ # Creates 30 site spin configuration from seed value 2.
+ random.seed(2)
+ spins.randomize(30)
+ print("Spin configuration before sweep:", spins)
+
+ # Performs sweep
+ spins = ham.metropolis_sweep(spins,10)
+ print("Spin configuration after sweep:", spins)
+
+This should produce the following output:
+::
+ 
+ Spin configuration before sweep: 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0.
+ Spin configuration after sweep: 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1.
+
+Calculating thermal quantities for an N=30 spin system using metropolis sampling
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-This example shows how to calculate the thermal average quantities of an N=50 spin system at a
+This example shows how to calculate the thermal average quantities of an N=30 spin system at a
 specific temperature (T = 10K, in this case).
+::
+ 
+ import montecarlo
+ import random
+
+ # Create Hamiltonian
+ ham = montecarlo.Hamiltonian()
+ ham.initialize(-2,1.1,True)
+
+ # Run metropolis sampling with 1000 montecarlo steps, 100 burned steps
+ random.seed(2)
+ energy, magnetization, heat_capacity, mag_susceptibility = montecarlo.montecarlo_metropolis(30,ham,10,1000,100)
+
+ # Prints output
+ print("Average Energy:", round(energy,1))
+ print("Average Magnetization:", round(magnetization,1))
+ print("Heat Capacity:", round(heat_capacity,1))
+ print("Magnetic Susceptibility:", round(mag_susceptibility,1))
+
+This should produce the following output:
+::
+
+ Average Energy: -13.8
+ Average Magnetization: -2.2
+ Heat Capacity: 1.2
+ Magnetic Susceptibility: 1.8
 
 Generating a plot of average thermal quantities using metropolis sampling
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+This example shows how to generate a plot of thermal quantities for an N=30 system using metropolis sampling.
+::
+ 
+ import montecarlo
+ import matplotlib.pyplot as plt
+
+ # Create Hamiltonian
+ ham = montecarlo.Hamiltonian()
+ ham.initialize(-2,1.1,True)
+
+ # Generate lists of thermal quantities. Each entry is calculated using 1000 montecarlo steps and 100 burned steps
+ temps, energies, magnetizations, heat_caps, mag_susceptibilities = montecarlo.generate_montecarlo_thermal_quantities(30,ham,1,10,0.1,1000,100)
+
+ # Creates plot
+ plt.plot(
+  temps, energies, '-r',
+  temps, magnetizations, '-b',
+  temps, heat_caps, '-g',
+  temps, mag_susceptibilities, '-y'
+ )
+ plt.legend(["Average Energy", "Average Magnetization", "Heat Capacity", "Mag Susceptibility"], loc='best')
+ plt.xlabel("Temperature (K)")
+ plt.title("Thermal Quantities vs. Temperature")
+ 
+This code should produce something similar to the following plot (there will presumably be variations due to the probabilistic nature of metropolis sampling):
+
+.. image:: ./montecarlo_1000_100.png
+ :width: 400
+
+Demonstration of the effect of changing the number of montecarlo steps/burned steps
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+The following two code blocks show the effect of changing the number of montecarlo steps and burned steps used when generating the plots of the thermal
+quantities of an N=30 spin system.
+
+For 100 montecarlo steps and 10 burned steps:
+::
+
+ import montecarlo
+ import matplotlib.pyplot as plt
+
+ # Create Hamiltonian
+ ham = montecarlo.Hamiltonian()
+ ham.initialize(-2,1.1,True)
+
+ # Generate lists of thermal quantities. Each entry is calculated using 100 montecarlo steps and 10 burned steps
+ temps, energies, magnetizations, heat_caps, mag_susceptibilities = montecarlo.generate_montecarlo_thermal_quantities(30,ham,1,10,0.1,100,10)
+
+ # Creates plot
+ plt.plot(
+  temps, energies, '-r',
+  temps, magnetizations, '-b',
+  temps, heat_caps, '-g',
+  temps, mag_susceptibilities, '-y'
+ )
+ plt.legend(["Average Energy, "Average Magnetization", "Heat Capacity", "Mag Suceptibility"], loc='best')
+ plt.xlabel("Temperature (K)")
+ plt.title("Thermal Quantities vs. Temperature")
+
+This produces a plot similar to that below:
+
+.. image:: ./montecarlo_100_10.png
+ :width: 400
+
+For 10000 montecarlo steps and 1000 burned steps:
+::
+
+ import montecarlo
+ import matplotlib.pyplot as plt
+
+ # Create Hamiltonian
+ ham = montecarlo.Hamiltonian()
+ ham.initialize(-2,1.1,True)
+
+ # Generate lists of thermal quantities. Each entry is calculated using 10000 montecarlo steps and 1000 burned steps
+ temps, energies, magnetizations, heat_caps, mag_susceptbilities = montecarlo.generate_montecarlo_thermal_quantities(30,ham,1,10,0.1,10000,1000)
+
+ # Creates plot
+ plt.plot(
+  temps, energies, '-r',
+  temps, magnetizations, '-b',
+  temps, heat_caps, '-g',
+  temps, mag_susceptibilities, '-y'
+ )
+ plt.legend(["Average Energy", "Average Magnetization", "Heat Capacity", "Mag Susceptibility"], loc='best')
+ plt.xlabel("Temperature (K)")
+ plt.title("Thermal Quantities vs. Temperature")
+
+This produces a plot similar to that shown below:
+
+.. image:: ./montecarlo_10000_1000.png
+ :width: 400
+
+Based on initial testing, the times required to create these plots for N=30 are given below:
+
+* Montecarlo steps: 100, burned steps: 10 - approximately 9 seconds.
+* Montecarlo steps: 1000, burned steps: 100 - approximately 1 minute and 34 seconds.
+* Montecarlo steps: 10000, burned steps: 1000 - approximately 16 minutes and 28 seconds.

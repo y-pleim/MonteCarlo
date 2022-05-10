@@ -8,6 +8,7 @@ Class Overview
    montecarlo.SpinConfigurationSystem
    montecarlo.Hamiltonian
    montecarlo.montecarlo_metropolis
+   montecarlo.generate_montecarlo_thermal_quantities
 
 API Documentation
 =================
@@ -26,7 +27,7 @@ API Documentation
    :members:
    :special-members:
    :noindex:
-.. autoclass:: montecarlo_metropolis
-   :members:
-   :special-members:
+.. autofunction:: montecarlo_metropolis
+   :noindex:
+.. autofunction:: generate_montecarlo_thermal_quantities
    :noindex:
