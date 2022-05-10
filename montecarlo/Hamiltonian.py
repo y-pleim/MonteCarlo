@@ -326,7 +326,7 @@ class Hamiltonian:
 
         i = start
         # populates temperature list
-        while i <= end:
+        while i < end:
             temps_list.append(i)
             i += step
 

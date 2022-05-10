@@ -63,3 +63,63 @@ def montecarlo_metropolis(N,ham,temp,montecarlo_steps,burn_steps=0):
     heat_cap = (avg_energies_squared - avg_energy**2) / (temp**2)
     mag_susceptibility = (avg_magnetizations_squared - avg_mag**2) / temp
     return avg_energy, avg_mag, heat_cap, mag_susceptibility
+
+def generate_montecarlo_thermal_quantities(N, ham, start=1, end=10, step=0.1, m_steps=1000, burn_steps=100):
+    """
+    Uses metropolis sampling to generate lists of the average energy, average magnetization, heat
+    capacity, and magnetic susceptibility values for an N-spin system over a specified range of temperatures.
+
+    Parameters
+    ----------
+    N : int
+        The number of spins in the system.
+    ham : Hamiltonian
+        The Hamiltonian used to characterize the system.
+    start : float, default: 1
+        The start of the temperature range..
+    end : float, default: 10
+        The end of the temperature range.
+    step : float, default: 0.1
+        The size of the gap between successive temperature values.
+    m_steps : int, default: 1000
+        The number of times the metropolis sweep is run and the results are kept.
+    burn_steps : int, default: 100
+        The number of times the metropolis sweep is run before the results are kept.
+
+    Returns
+    -------
+    temps_list : list
+        The list generated from the start, step, and end temperature values.
+    energies_list : list
+        The generated list of average energies.
+    magnetization_list : list
+        The generated list of average magnetization values.
+    heat_capacity_list : list
+        The generated list of heat capacity values.
+    mag_susceptibility_list : list
+        The generated list of magnetic susceptibility values.
+            
+    """
+    
+    temps_list = []
+    energies_list = []
+    magnetization_list = []
+    heat_capacity_list = []
+    mag_susceptibility_list = []
+
+    temp = start
+    while temp < end:
+        temps_list.append(temp)
+        temp += step
+
+    for temp in temps_list:
+        a, b, c, d = montecarlo_metropolis(N, ham, temp, m_steps, burn_steps)
+        energies_list.append(a)
+        magnetization_list.append(b)
+        heat_capacity_list.append(c)
+        mag_susceptibility_list.append(d)
+
+    return temps_list, energies_list, magnetization_list, heat_capacity_list, mag_susceptibility_list
+
+
+

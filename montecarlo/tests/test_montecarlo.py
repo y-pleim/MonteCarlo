@@ -27,14 +27,24 @@ def test_SpinConfiguration():
     random.seed(2)
     conf2.randomize(8)
     conf.initialize([1, 1, 1, 1, 1, 1, 1, 1])
-    
+
     assert (conf[0] == 1)
     assert (str(conf) == "1, 1, 1, 1, 1, 1, 1, 1.")
     assert (conf.get_spins() == [1, 1, 1, 1, 1, 1, 1, 1])
     assert (conf.n_sites() == 8)
     assert (conf.compute_magnetization() == 8)
     assert (conf2.get_spins() == [0, 0, 0, 1, 0, 1, 1, 0])
+    
+    conf.set_site(2,0)
+    assert (conf.get_spins() == [1, 1, 0, 1, 1, 1, 1, 1])
+    
+    def test(): 
+        try:
+            conf.set_site(2,'test')
+        finally:
+            return 1
 
+    assert (test() == 1)
 
 def test_Hamiltonian():
     ham = montecarlo.Hamiltonian()
@@ -112,3 +122,14 @@ def test_montecarlo_metropolis():
     assert (round(mag,2) == -0.57)
     assert (round(heat_cap,2) == 0.32)
     assert (round(mag_sust,2) == 0.51)
+
+    random.seed(2)
+    temps, energies, magnetizations, heat_caps, mag_susts = montecarlo.generate_montecarlo_thermal_quantities(8,ham,9)
+    index = len(temps)-1
+    
+    assert (round(temps[index],1) == 10)
+    assert (round(energies[index],0) == -4)
+    assert (round(magnetizations[index],0) == -1)
+    assert (round(heat_caps[index],0) == 0)
+    assert (round(mag_susts[index],0) == 1)
+
