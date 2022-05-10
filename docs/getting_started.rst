@@ -82,16 +82,15 @@ For the calculations executed by this package, Boltzmann's constant (k) has been
 Metropolis Sampling
 '''''''''''''''''''
 Calculating the canonical partition function for a spin system requires finding the energy for each
-possible state. As such, for larger N systems the process of calculating thermal quantities becomes
+possible state. For large N systems, this method of calculating thermal quantities becomes
 time-consuming.
 
-For larger systems, stochastic sampling methods such as metropolis sampling can be used for a more
+For large systems, stochastic sampling methods such as metropolis sampling can be used for a more
 efficient determination of these thermal quantities (while introducing some statistical noise in the process).
 
 Starting from a random spin configuration, the following steps are taken to find the next spin configuration
 to be included in the calculation of the thermal averages:
 
-* The energy of the configuration is calculated.
 * The ith spin is flipped and the energy difference due to this flip is determined.
 * To determine whether the new spin configuration should replace the current spin configuration, the ratio of the Boltzmann factors is calculated:
 
@@ -101,10 +100,9 @@ to be included in the calculation of the thermal averages:
 * The spin in the i+1 site is flipped, and the same calculations/logic are applied. This process is continued until there are no sites left to examine.
 
 
-
 This process (referred to as a metropolis sweep) can be carried out a large number of times. If the number of such steps is sufficiently large, the average
 of the values produced by the kept spin configurations will converge to that found in an exact calculation (i.e., applying the canonical ensemble). Increasing
-the number of steps generally reduces the amount of noise in the resulting values, but requires an increased computation time.
+the number of steps generally reduces the amount of noise in the resulting values but requires an increased computation time.
 
 Examples
 --------
@@ -143,7 +141,7 @@ This should produce the following output:
 Generating a random spin configuration and additional functions
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 The following example demonstrates how to create and print a random spin configuration with N=8 sites. The functionality
-of the n_sites and set_site methods are also demonstrated.
+of the n_sites and set_site methods is also demonstrated.
 ::
  
  import montecarlo
@@ -367,7 +365,7 @@ For 100 montecarlo steps and 10 burned steps:
   temps, heat_caps, '-g',
   temps, mag_susceptibilities, '-y'
  )
- plt.legend(["Average Energy, "Average Magnetization", "Heat Capacity", "Mag Suceptibility"], loc='best')
+ plt.legend(["Average Energy", "Average Magnetization", "Heat Capacity", "Mag Suceptibility"], loc='best')
  plt.xlabel("Temperature (K)")
  plt.title("Thermal Quantities vs. Temperature")
 
