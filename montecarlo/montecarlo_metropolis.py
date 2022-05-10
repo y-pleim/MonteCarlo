@@ -1,8 +1,9 @@
 from .SpinConfiguration import *
 from .Hamiltonian import *
 
-def montecarlo_metropolis(N,ham,temp,montecarlo_steps,burn_steps=0):
-    '''
+
+def montecarlo_metropolis(N, ham, temp, montecarlo_steps, burn_steps=0):
+    """
     Performs metropolis sampling to determine thermal quantities at the specified temperature
     for an N-spin system described by a particular Hamiltonian.
 
@@ -29,7 +30,7 @@ def montecarlo_metropolis(N,ham,temp,montecarlo_steps,burn_steps=0):
         The heat capacity derived from the average values produced by the kept metropolis sweeps.
     mag_susceptibility : float
         The magnetic susceptibility derived from the average values produced by the kept metropolis sweeps.
-    '''
+    """
     # Initialize spin configuration with N sites
     spins = SpinConfiguration()
     spins.randomize(N)
@@ -38,14 +39,14 @@ def montecarlo_metropolis(N,ham,temp,montecarlo_steps,burn_steps=0):
     magnetizations = []
     energies_squared = []
     magnetizations_squared = []
-    
+
     # runs sweep without producing values
     for i in range(burn_steps):
-        spins = ham.metropolis_sweep(spins,temp)
+        spins = ham.metropolis_sweep(spins, temp)
 
     # runs sweep and populates lists
     for i in range(montecarlo_steps):
-        spins = ham.metropolis_sweep(spins,temp)
+        spins = ham.metropolis_sweep(spins, temp)
         E_step = ham.compute_energy(spins)
         M_step = spins.compute_magnetization()
 
@@ -53,18 +54,21 @@ def montecarlo_metropolis(N,ham,temp,montecarlo_steps,burn_steps=0):
         magnetizations.append(M_step)
         energies_squared.append(E_step**2)
         magnetizations_squared.append(M_step**2)
-    
+
     # calculates quantities of interest
-    avg_energy = sum(energies)/(montecarlo_steps)
-    avg_mag = sum(magnetizations)/(montecarlo_steps)
-    avg_energies_squared = sum(energies_squared)/(montecarlo_steps)
-    avg_magnetizations_squared = sum(magnetizations_squared)/(montecarlo_steps)
-    
+    avg_energy = sum(energies) / (montecarlo_steps)
+    avg_mag = sum(magnetizations) / (montecarlo_steps)
+    avg_energies_squared = sum(energies_squared) / (montecarlo_steps)
+    avg_magnetizations_squared = sum(magnetizations_squared) / (montecarlo_steps)
+
     heat_cap = (avg_energies_squared - avg_energy**2) / (temp**2)
     mag_susceptibility = (avg_magnetizations_squared - avg_mag**2) / temp
     return avg_energy, avg_mag, heat_cap, mag_susceptibility
 
-def generate_montecarlo_thermal_quantities(N, ham, start=1, end=10, step=0.1, m_steps=1000, burn_steps=100):
+
+def generate_montecarlo_thermal_quantities(
+    N, ham, start=1, end=10, step=0.1, m_steps=1000, burn_steps=100
+):
     """
     Uses metropolis sampling to generate lists of the average energy, average magnetization, heat
     capacity, and magnetic susceptibility values for an N-spin system over a specified range of temperatures.
@@ -98,9 +102,9 @@ def generate_montecarlo_thermal_quantities(N, ham, start=1, end=10, step=0.1, m_
         The generated list of heat capacity values.
     mag_susceptibility_list : list
         The generated list of magnetic susceptibility values.
-            
+
     """
-    
+
     temps_list = []
     energies_list = []
     magnetization_list = []
@@ -119,7 +123,10 @@ def generate_montecarlo_thermal_quantities(N, ham, start=1, end=10, step=0.1, m_
         heat_capacity_list.append(c)
         mag_susceptibility_list.append(d)
 
-    return temps_list, energies_list, magnetization_list, heat_capacity_list, mag_susceptibility_list
-
-
-
+    return (
+        temps_list,
+        energies_list,
+        magnetization_list,
+        heat_capacity_list,
+        mag_susceptibility_list,
+    )

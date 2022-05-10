@@ -1,7 +1,7 @@
 import numpy
-import matplotlib.pyplot as plt
 import random
 import copy as cp
+
 
 class Hamiltonian:
     def __init__(self):
@@ -95,10 +95,6 @@ class Hamiltonian:
         )  # calculates coupling contribution of H
         energy = coupling_contribution + magnet_contribution
         return energy
-
-    # def energy_string_representation(self, spins):
-    # energy_string = str(-1 * sum_products) + "J/k + " + str(sum_magnet) + "mu/k"
-    # return energy_string
 
     def partition_function(self, temp, system):
         """
@@ -335,10 +331,17 @@ class Hamiltonian:
             energies_list.append(self.compute_average_energy(temps_list[i], system))
             magnetization_list.append(self.compute_average_mag(temps_list[i], system))
             heat_capacity_list.append(self.compute_heat_capacity(temps_list[i], system))
-            mag_susceptibility_list.append(self.compute_mag_susceptibility(temps_list[i], system))
+            mag_susceptibility_list.append(
+                self.compute_mag_susceptibility(temps_list[i], system)
+            )
 
-        return temps_list, energies_list, magnetization_list, heat_capacity_list, mag_susceptibility_list
-
+        return (
+            temps_list,
+            energies_list,
+            magnetization_list,
+            heat_capacity_list,
+            mag_susceptibility_list,
+        )
 
     def metropolis_sweep(self, spins, temp):
         """
@@ -357,67 +360,76 @@ class Hamiltonian:
             The most probable spin configuration resulting from the metropolis sweep.
 
         """
-        for i in range(spins.n_sites()): # for each site in the lattice
-            conf = cp.deepcopy(spins) # copies the result of the previous iteration
+        for i in range(spins.n_sites()):  # for each site in the lattice
+            conf = cp.deepcopy(spins)  # copies the result of the previous iteration
 
             # flips spin at site i
             if spins[i] == 0:
-                conf.set_site(i,1) 
+                conf.set_site(i, 1)
             else:
-                conf.set_site(i,0)
+                conf.set_site(i, 0)
 
-            E_i = self.compute_energy(spins) # calculates the energy of the spins before a flip
-                        
-            J_term = 0 # value that reflects the change in the J term in the Hamiltonian
-            mu_term = 0 # value that reflects the change in the mu term in the Hamiltonian
+            J_term = (
+                0  # value that reflects the change in the J term in the Hamiltonian
+            )
+            mu_term = (
+                0  # value that reflects the change in the mu term in the Hamiltonian
+            )
 
             # logic for changing J_term and mu_term
-            if self.doPeriodicBoundaryConditions == True:
-                if i == 0: # compares spin at first site to adjacent spins
-                    if conf[len(conf.config)-1] == conf[i] and conf[i] == conf[1]:
+            if self.doPeriodicBoundaryConditions:
+                if i == 0:  # compares spin at first site to adjacent spins
+                    if conf[len(conf.config) - 1] == conf[i] and conf[i] == conf[1]:
                         J_term = 4
-                    elif conf[len(conf.config)-1] == conf[1]:
+                    elif conf[len(conf.config) - 1] == conf[1]:
                         J_term = -4
-                elif i == len(conf.config)-1: # compares spin at last site to adjacent spins
-                    if conf[i-1] == conf[i] and conf[i] == conf[0]:
+                elif (
+                    i == len(conf.config) - 1
+                ):  # compares spin at last site to adjacent spins
+                    if conf[i - 1] == conf[i] and conf[i] == conf[0]:
                         J_term = 4
-                    elif conf[i-1] == conf[0]:
+                    elif conf[i - 1] == conf[0]:
                         J_term = -4
-                else: # compares spin at any other site to adjacent spins
-                    if conf[i-1] == conf[i] and conf[i] == conf[i+1]:
+                else:  # compares spin at any other site to adjacent spins
+                    if conf[i - 1] == conf[i] and conf[i] == conf[i + 1]:
                         J_term = 4
-                    elif conf[i-1] == conf[i+1]:
+                    elif conf[i - 1] == conf[i + 1]:
                         J_term = -4
             else:
-                if i == 0: # compares spin at first site to spin at second site
+                if i == 0:  # compares spin at first site to spin at second site
                     if conf[i] == conf[1]:
                         J_term = 2
                     else:
                         J_term = -2
-                elif i == len(conf.config)-1: # compares spin at last site to spin before it
-                    if conf[i-1] == conf[i]:
+                elif (
+                    i == len(conf.config) - 1
+                ):  # compares spin at last site to spin before it
+                    if conf[i - 1] == conf[i]:
                         J_term = 2
                     else:
                         J_term = -2
-                else: # compares spin at any other site to adjacent spins
-                    if conf[i-1] == conf[i] and conf[i] == conf[i+1]:
+                else:  # compares spin at any other site to adjacent spins
+                    if conf[i - 1] == conf[i] and conf[i] == conf[i + 1]:
                         J_term = 4
-                    elif conf[i-1] == conf[i+1]:
+                    elif conf[i - 1] == conf[i + 1]:
                         J_term = -4
-            
-            if conf[i] == 0: # if the spin has been flipped from up to down
+
+            if conf[i] == 0:  # if the spin has been flipped from up to down
                 mu_term = -2
-            else: # if the spin has been flipped from down to up
-               mu_term = 2
-            
+            else:  # if the spin has been flipped from down to up
+                mu_term = 2
+
             # calculates change in energy after spin flip
-            deltaE = -J_term*self.J + mu_term*self.mu
-                           
+            deltaE = -J_term * self.J + mu_term * self.mu
+
             check_num = random.random()
-            probability = numpy.exp(-deltaE/temp) # ratio of Boltzmann factors of final and initial state
-                                  
-            if probability > check_num: # if the flip is deemed energetically favorable
-                spins = cp.deepcopy(conf) # store the reference to the new SpinConfiguration in the spins variable
+            probability = numpy.exp(
+                -deltaE / temp
+            )  # ratio of Boltzmann factors of final and initial state
+
+            if probability > check_num:  # if the flip is deemed energetically favorable
+                spins = cp.deepcopy(
+                    conf
+                )  # store the reference to the new SpinConfiguration in the spins variable
         new_spins = spins
         return new_spins
-

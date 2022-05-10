@@ -61,8 +61,8 @@ class SpinConfiguration:
         """
         number_of_sites = len(self.config)
         return number_of_sites
-    
-    def set_site(self,i,value):
+
+    def set_site(self, i, value):
         """
         Allows the user to set the spin of the site indexed by i to either 0 (up spin) or 1 (down spin).
         If the value entered is not 0 or 1, an error is raised.
@@ -78,8 +78,9 @@ class SpinConfiguration:
         if value == 0 or value == 1:
             self.config[i] = value
         else:
-            raise ValueError("Unacceptable value. Please enter either 0 (up spin) or 1 (down spin).")
-
+            raise ValueError(
+                "Unacceptable value. Please enter either 0 (up spin) or 1 (down spin)."
+            )
 
     def randomize(self, N=8):
         """
