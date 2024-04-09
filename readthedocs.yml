@@ -14,9 +14,6 @@ build:
   tools:
 
     python: 3.8
-    install:
-      - method: pip
-      - path: .
 
     # You can also specify other tool versions:
 
