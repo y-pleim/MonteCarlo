@@ -38,5 +38,5 @@ sphinx:
 
   # fail_on_warning: true
 
-#conda:
-#  environment: docs/requirements.yaml
+conda:
+  environment: ./docs/requirements.yaml
